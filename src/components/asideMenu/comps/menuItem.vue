@@ -16,6 +16,8 @@
 import type { PropType } from 'vue';
 import type { IMenu } from '@/types';
 import { useNavStack } from '@/store/NavStack';
+import { useUserStore } from '@/store/User';
+import { storeToRefs } from 'pinia';
 // import type { INavItem } from '@/types/nav';
   const props = defineProps({
     item: {
@@ -24,11 +26,29 @@ import { useNavStack } from '@/store/NavStack';
     }
   });
   console.log(props.item);
-  const navStacks = useNavStack()
+  const userStore = useUserStore();
+  const navStacks = useNavStack();
   let { addNavToStack } = navStacks;
+  const { userConfigDatas }  = storeToRefs(userStore);
+  const menulist = userConfigDatas.value.menulist
+  function getCurrentRouteOjectToPath(list: IMenu[], url: string): IMenu {
+    for (const item of list) {
+      if (item.url === url) {
+        return item
+      }
+      if (item.children && item.children.length) {
+        const result = getCurrentRouteOjectToPath(item.children, url);
+        if (result) {
+          return result
+        }
+      }
+    }
+  }
 
   const triggerMenuClicker = function (path: { index: string}) {
-    console.log('path', path.index);
+    const { name, url, icon } =  getCurrentRouteOjectToPath(menulist, path.index);
+    addNavToStack(url, name, icon)
+    console.log('path----->', );
     
   }
   

@@ -40,6 +40,12 @@
 :deep(.el-tabs__content) {
   display: none !important;
 }
+:deep(.custom-tabs-label) {
+  display: flex;
+  .el-icon {
+    margin-right: 6px;
+  }
+}
 
 
 </style>
