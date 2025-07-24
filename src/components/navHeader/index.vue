@@ -2,7 +2,7 @@
   <div class="nav-header-container">
     <el-tabs
       v-model="currentNav.url"
-      type="border-card"
+      type="card"
       class="demo-tabs"
       closable
     >
@@ -39,6 +39,10 @@
 <style lang="less" scoped>
 :deep(.el-tabs__content) {
   display: none !important;
+}
+:deep(.el-tabs__item) {
+  // margin: 0 2px;
+  // border: 1px solid gray;
 }
 :deep(.custom-tabs-label) {
   display: flex;

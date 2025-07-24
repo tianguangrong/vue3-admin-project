@@ -28,10 +28,10 @@ import { storeToRefs } from 'pinia';
   console.log(props.item);
   const userStore = useUserStore();
   const navStacks = useNavStack();
-  let { addNavToStack } = navStacks;
+  let { addNavToStack, updateCurrentNav } = navStacks;
   const { userConfigDatas }  = storeToRefs(userStore);
   const menulist = userConfigDatas.value.menulist
-  function getCurrentRouteOjectToPath(list: IMenu[], url: string): IMenu {
+  function getCurrentRouteOjectToPath(list: IMenu[], url: string): IMenu | undefined {
     for (const item of list) {
       if (item.url === url) {
         return item
@@ -43,11 +43,13 @@ import { storeToRefs } from 'pinia';
         }
       }
     }
+    return;
   }
 
   const triggerMenuClicker = function (path: { index: string}) {
-    const { name, url, icon } =  getCurrentRouteOjectToPath(menulist, path.index);
-    addNavToStack(url, name, icon)
+    const { name, url, icon } =  getCurrentRouteOjectToPath(menulist, path.index) as IMenu;
+    addNavToStack(url, name, icon);
+    updateCurrentNav(url, name, icon)
     console.log('path----->', );
     
   }
