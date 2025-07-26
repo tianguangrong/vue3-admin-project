@@ -95,6 +95,8 @@
     margin-right: 6px;
   }
 }
-
+:deep(.el-tabs__header) {
+  margin-bottom:  0;
+}
 
 </style>

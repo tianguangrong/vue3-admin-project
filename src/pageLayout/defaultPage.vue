@@ -11,7 +11,9 @@
         <div class="main-content">
             <NavHeader/>
           <el-main>
-            <router-view/>
+            <el-scrollbar>
+              <router-view/>
+             </el-scrollbar>
           </el-main>
         </div>
       </el-container>
@@ -32,7 +34,7 @@ import AsideMenu from '@/components/asideMenu/index.vue';
     height: 100%;
     width: 100%;
     .el-aside {
-      box-shadow: 10px 0 8px -8px rgba(0, 0, 0, 0.2);
+      box-shadow: 6px 0 8px -8px rgba(0, 0, 0, 0.2);
     }
     .el-header {
       box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.2);
@@ -41,7 +43,19 @@ import AsideMenu from '@/components/asideMenu/index.vue';
     }
     .main-content {
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      .el-main {
+        flex: 1;
+        padding: 0;
+      }
     }
   }
+}
+:deep(.el-scrollbar__view) {
+  width: auto;
+  height: 100% !important;
+  padding: 12px;
+  box-sizing: border-box;
 }
 </style>

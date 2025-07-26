@@ -4,7 +4,9 @@
       :default-active="route.path"
       class="el-menu-vertical-demo"
     >
+    <el-scrollbar>
       <MenuItem v-for="(item) of menulist" :key="item.url" :item="item"/>
+    </el-scrollbar>
     </el-menu>
 </template>
 <script setup lang="ts" name="AsideMenu">
@@ -18,6 +20,11 @@
   const  menulist  =  JSON.parse(JSON.stringify(userConfigDatas.value.menulist));
 </script>
 <style lang="less" scoped>
-
+.el-menu {
+  width: auto;
+  height: 100%;
+  padding-bottom: 24px;
+  box-sizing: border-box;
+}
 
 </style>
