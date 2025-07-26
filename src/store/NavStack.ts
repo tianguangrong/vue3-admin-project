@@ -39,7 +39,6 @@ export const useNavStack = defineStore('nav', {
       } else if (this.currentNav.url !== url) {
         this.navStack.splice(index, 1);
       }
-      // this.navStack.splice(index, 1);
     }
   },
   getters: {
