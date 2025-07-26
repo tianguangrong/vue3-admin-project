@@ -25,7 +25,6 @@ import { storeToRefs } from 'pinia';
       required: true
     }
   });
-  console.log(props.item);
   const userStore = useUserStore();
   const navStacks = useNavStack();
   let { addNavToStack, updateCurrentNav } = navStacks;
@@ -49,8 +48,7 @@ import { storeToRefs } from 'pinia';
   const triggerMenuClicker = function (path: { index: string}) {
     const { name, url, icon } =  getCurrentRouteOjectToPath(menulist, path.index) as IMenu;
     addNavToStack(url, name, icon);
-    updateCurrentNav(url, name, icon)
-    console.log('path----->', );
+    updateCurrentNav(url, name, icon);
     
   }
   

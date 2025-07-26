@@ -16,7 +16,6 @@
   const userStore = useUserStore();
   const { userConfigDatas } = storeToRefs(userStore);
   const  menulist  =  JSON.parse(JSON.stringify(userConfigDatas.value.menulist));
-  console.info('menulist------', menulist);
 </script>
 <style lang="less" scoped>
 

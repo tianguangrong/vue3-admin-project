@@ -3,6 +3,8 @@
     <el-tabs
       v-model="currentNav.url"
       type="card"
+      @tab-change="handleTabChanger"
+      @tab-remove="handleRemoveClicker"
       class="demo-tabs"
       closable
     >
@@ -29,9 +31,50 @@
 <script setup lang="ts" name="NavHeader">
   import { useNavStack } from '@/store/NavStack.ts';
   import { storeToRefs } from 'pinia';
+  import type {TabPaneName} from 'element-plus';
+  import { useRouter, useRoute } from 'vue-router';
+  import { useUserStore } from '@/store/User'
   const navStacks = useNavStack();
-  let { navStack, currentNav } = storeToRefs(navStacks)
-  console.log(navStack.value, currentNav.value, '11222');
+  const router = useRouter();
+  import type { IMenu } from '@/types';
+  const { userConfigDatas } = storeToRefs(useUserStore());
+  const menulist = userConfigDatas.value.menulist;
+  // userConfigDatas
+  let { navStack, currentNav } = storeToRefs(navStacks);
+  const { updateCurrentNav, removeSliceOnNavStack, addNavToStack } = navStacks;
+  const handleTabChanger = (urlValue: TabPaneName):void => {
+    const [{ url, name,  icon }] = navStack.value.filter(item => item.url === urlValue);
+    updateCurrentNav(url, name, icon)
+    router.push(url as string)
+  };
+  function getCurrentRouteOjectToPath(list: IMenu[], url: string): IMenu | undefined {
+    for (const item of list) {
+      if (item.url === url) {
+        return item
+      }
+      if (item.children && item.children.length) {
+        const result = getCurrentRouteOjectToPath(item.children, url);
+        if (result) {
+          return result
+        }
+      }
+    }
+    return;
+  }
+  const getCurrentPathUrl = ():void => {
+    const {path} = useRoute();
+    const { url, name,  icon } = getCurrentRouteOjectToPath(menulist, path) as IMenu;
+    console.info('menulist------', url, name, icon);
+    addNavToStack(url, name, icon);
+    updateCurrentNav(url, name, icon)
+  }
+  getCurrentPathUrl()
+  const handleRemoveClicker = (urlValue: string):void => {
+    const removeIndex = navStack.value.findIndex(item => item.url === urlValue);
+    removeSliceOnNavStack(urlValue, removeIndex)
+    console.log('removeIndex', removeIndex);
+  }
+
   
 
 </script>

@@ -47,7 +47,6 @@
   const useStore = useUserStore();
   const { userConfigDatas }  = storeToRefs(useStore);
   const { logout } = useStore;
-  console.log('userConfigDatas', userConfigDatas.value.user);
   
   let message = ref(2);
 
