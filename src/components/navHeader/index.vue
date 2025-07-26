@@ -71,8 +71,10 @@
   getCurrentPathUrl()
   const handleRemoveClicker = (urlValue: string):void => {
     const removeIndex = navStack.value.findIndex(item => item.url === urlValue);
-    removeSliceOnNavStack(urlValue, removeIndex)
-    console.log('removeIndex', removeIndex);
+    removeSliceOnNavStack(urlValue, removeIndex);
+    console.log('currentNav.value.url', currentNav.value.url);
+    // debugger
+    router.push(currentNav.value.url)
   }
 
   

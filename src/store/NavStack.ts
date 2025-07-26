@@ -31,14 +31,17 @@ export const useNavStack = defineStore('nav', {
     },
     removeSliceOnNavStack(url: string, index: number):void {
       console.log(url, index);
-      if (index !== 0) {
+      if (index !== 0 && this.currentNav.url === url) {
         // 改变原数组的方法
         this.navStack.splice(index, 1);
         this.currentNav = this.navStack[index - 1];
+        return
+      } else if (this.currentNav.url !== url) {
+        this.navStack.splice(index, 1);
       }
+      // this.navStack.splice(index, 1);
     }
   },
   getters: {
-
   }
 });
