@@ -4,6 +4,17 @@ import Mock from 'mockjs';
 Mock.setup({
   timeout: '200-900'
 })
+Mock.mock('https://www.demo.com/api/get-device-sumary', 'get', () => {
+  return {
+      code: 200,
+      message: 'success',
+      data: {
+        legend: ['设备总览'],
+        category: [ '闲置数',  '报废数', '更换数', '维修数', '故障数', '使用数' ],
+        record: [4200, 3000, 20000, 35000, 50000, 18000]
+      }
+    }
+})
 Mock.mock('https://www.demo.com/api/login', 'post', (options: any) => {
   
   const { loginName, loginPsw } = JSON.parse(options.body);

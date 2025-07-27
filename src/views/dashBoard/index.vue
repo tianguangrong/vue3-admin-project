@@ -10,6 +10,35 @@
   import ba from '@/assets/imgs/8.png'
   import jiu from '@/assets/imgs/9.png'
   import Rador from './comps/rador.vue'
+  import http from '@/utils/http';
+  import { ref, reactive } from  'vue'
+  import type { Tlenget, TData, ICategory, IDeviceDataRes } from '@/types/dashBoard';
+  let getLegend = ref<Tlenget>([]);
+  let getCategory = reactive<ICategory[]>([]);
+  let getDeviceData = ref<TData>([]);
+
+  async function getDeviceSumaryDatas(): Promise<IDeviceDataRes<string[], number[], string[]> | null>{
+    const res = await http.get('/api/get-device-sumary', {})
+    if (res.data) {
+      const { legend, category, record } = res.data as IDeviceDataRes<string[], number[], string[]>;
+      return Promise.resolve({
+        legend,
+        record,
+        category
+      })
+    }
+    return Promise.reject(null)
+  }
+  getDeviceSumaryDatas().then(result => {
+    if (result) {
+        getCategory = result.category.map(item => {
+          return { name: item }
+        });
+        getLegend.value = result.legend;
+        getDeviceData.value = result.record; 
+        console.log('result:', getLegend, getDeviceData, getCategory);
+    }
+  });
 </script>
 
 <template>
@@ -87,7 +116,7 @@
     <el-col :span="6" class="right">
       <el-card class="device-view">
         <template v-slot:header>设备总览</template>
-        <Rador/>
+        <Rador :legend="getLegend" :record="getDeviceData" :category="getCategory"/>
       </el-card>
       <el-card class="sale-static"></el-card>
       <el-card class="alarm-datas"></el-card>

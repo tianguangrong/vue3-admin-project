@@ -1,26 +1,24 @@
 <script setup lang="ts" name="Rador">
-    import { ref, getCurrentInstance, onMounted } from 'vue';
+    import { ref, getCurrentInstance, onMounted, watchEffect } from 'vue';
+    import type { Tlenget, TData, ICategory, IDeviceDataRes } from '@/types/dashBoard';
+    const props = defineProps<{
+        legend: Tlenget,
+        record: TData,
+        category: ICategory[]
+    }>();
+    console.log('props', props);
+    
     const radorRef = ref(null);
     const instance = getCurrentInstance();
-    const $echarts = instance?.appContext.config.globalProperties.$echarts
-    console.log('instance', $echarts, radorRef);
+    const $echarts = instance?.appContext.config.globalProperties.$echarts;
     const option = {
-        title: {
-            // text: 'Basic Radar Chart'
-        },
         legend: {
-            data: ['设备总览'],
+            data: [''],
             left: 'left'
         },
         radar: {
-            // shape: 'circle',
             indicator: [
-                { name: '闲置数', max: 6500 },
-                { name: '报废数', max: 16000 },
-                { name: '更换数', max: 30000 },
-                { name: '维修数', max: 38000 },
-                { name: '故障数', max: 52000 },
-                { name: '使用数', max: 25000 }
+                { name: '' },
             ]
         },
         series: [
@@ -28,19 +26,27 @@
                 type: 'radar',
                 data: [
                     {
-                        value: [4200, 3000, 20000, 35000, 50000, 18000],
-                        name: '设备总览'
+                        value: [0],
+                        name: ''
                     },
                 ]
             }
         ]
     };
-    onMounted(() => {
-        if (radorRef.value) {
-            const radorEchart = $echarts.init(radorRef.value)
-            option && radorEchart.setOption(option)
-            
+    watchEffect(() => {
+        if (props.record.length) {
+            option.legend.data = props.legend;
+            option.radar.indicator = props.category;
+            option.series[0].data[0].value = props.record;
+            option.series[0].data[0].name = props.legend[0];
+            if (radorRef.value) {
+                const radorEchart = $echarts.init(radorRef.value)
+                option && radorEchart.setOption(option)
+                
+            }
         }
+    })
+    onMounted(() => {
     })
 </script>
 

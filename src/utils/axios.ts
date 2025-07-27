@@ -23,8 +23,6 @@ service.interceptors.request.use((config:InternalAxiosRequestConfig) => {
   return Promise.reject(error)
 })
 service.interceptors.response.use((response:AxiosResponse) => {
-  console.log(response);
-  debugger
   const { code, message } = response['data']
   if (code === 200 && message === '登录成功') {
     ElNotification({
@@ -33,7 +31,9 @@ service.interceptors.response.use((response:AxiosResponse) => {
       type: 'success',
       message: message
     })
-  } else {
+  } else if (code === 200) {
+    return response['data'];
+  }else {
     ElNotification({
       title:'Error',
       duration: 5000,
