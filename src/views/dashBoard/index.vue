@@ -12,6 +12,7 @@
   import Rador from './comps/rador.vue'
   import http from '@/utils/http';
   import { ref, reactive } from  'vue'
+  import PowerStatics from './comps/powerStatics.vue';
   import type { Tlenget, TData, ICategory, IDeviceDataRes } from '@/types/dashBoard';
   let getLegend = ref<Tlenget>([]);
   let getCategory = reactive<ICategory[]>([]);
@@ -111,7 +112,9 @@
           <div>待办事项</div>
         </div>
       </el-card>
-      <el-card class="statics-content"></el-card>
+      <el-card class="statics-content">
+        <PowerStatics/>
+      </el-card>
     </el-col>
     <el-col :span="6" class="right">
       <el-card class="device-view">
@@ -196,6 +199,12 @@
       }
       .statics-content {
         flex: 1;
+        :deep(.el-card__body) {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          box-sizing: border-box;
+        }
       }
     }
     .el-col.right {
