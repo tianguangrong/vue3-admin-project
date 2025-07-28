@@ -136,7 +136,7 @@
       display: flex;
       flex-direction: column;
       .el-card.datas-sumary {
-        height: 340px;
+        height: 310px;
         .title {
           display: flex;
           align-items: center;
@@ -167,7 +167,6 @@
         }
       }
       .used-content {
-        height: 300px;
         margin: 12px 0;
         display: flex;
         align-items: center;
@@ -217,7 +216,7 @@
         margin: 12px 0;
       }
       .alarm-datas {
-        height: 380px;
+        flex: 1;
       }
     }
   }
