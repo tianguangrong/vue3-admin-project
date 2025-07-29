@@ -10,3 +10,9 @@
     record: U,
     category: K
   }
+  export  interface ICharge {
+    charges: TData;
+    chargeTime:TData;
+    chargeRate: TData
+  }
+  export type  IMixResponse = IDeviceDataRes<string[], ICharge, string[]>

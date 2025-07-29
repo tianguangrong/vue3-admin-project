@@ -13,11 +13,36 @@
   import http from '@/utils/http';
   import { ref, reactive } from  'vue'
   import PowerStatics from './comps/powerStatics.vue';
-  import type { Tlenget, TData, ICategory, IDeviceDataRes } from '@/types/dashBoard';
+  import type { Tlenget, TData, ICategory, IDeviceDataRes, IMixResponse, ICharge } from '@/types/dashBoard';
   let getLegend = ref<Tlenget>([]);
   let getCategory = reactive<ICategory[]>([]);
   let getDeviceData = ref<TData>([]);
-
+  let getPowerLegend = ref<Tlenget>([]);
+  let getPowerCategory = reactive<Tlenget>([]);
+  let getPowerData = ref<ICharge>({
+      charges: [],
+      chargeRate: [],
+      chargeTime:[]
+    });
+  async function getPowerStatic():Promise<IMixResponse | null> {
+    const res = await http.get('/api/get-power-static');
+    if (res.data) {
+      const { legend, category, record } = res.data as IMixResponse;
+      return {
+        legend,
+        category,
+        record,
+      }
+    }
+    return Promise.reject(null)
+  }
+  getPowerStatic().then(result => {
+    if (result) {
+      getPowerLegend.value = result.legend;
+      getPowerCategory = result.category;
+      getPowerData.value = result.record;
+    }
+  })
   async function getDeviceSumaryDatas(): Promise<IDeviceDataRes<string[], number[], string[]> | null>{
     const res = await http.get('/api/get-device-sumary', {})
     if (res.data) {
@@ -113,7 +138,7 @@
         </div>
       </el-card>
       <el-card class="statics-content">
-        <PowerStatics/>
+        <PowerStatics  :legend="getPowerLegend" :record="getPowerData" :category="getPowerCategory"/>
       </el-card>
     </el-col>
     <el-col :span="6" class="right">

@@ -1,6 +1,41 @@
 <script setup lang="ts" name="PowerStatics">
 
-  import { ref, onMounted, getCurrentInstance } from 'vue';
+  import { ref, watch, onMounted, getCurrentInstance, type PropType } from 'vue';
+  import type { Tlenget, TData, ICategory, IDeviceDataRes, IMixResponse, ICharge } from '@/types/dashBoard';
+  
+  const props = defineProps({
+    lenged: {
+      type: Array as PropType<Tlenget>,
+      default: () => {
+        return []
+      }
+    },
+    category: {
+      type: Array as PropType<Tlenget>,
+      default: () => {
+        return []
+      }
+    },
+    record: {
+      type: Object as PropType<ICharge>,
+      default: () => {
+        return []
+      }
+    },
+  })
+  watch(() => props, (newVal) => {
+    option.legend.data = newVal.lenged;
+    option.xAxis.data = newVal.category;
+    option.series[0].data = newVal.record.charges;
+    option.series[1].data = newVal.record.chargeTime;
+    option.series[2].data = newVal.record.chargeRate;
+    if (powerStaticRef.value) {
+      let myPowerChart = $echarts.init(powerStaticRef.value)
+      option && myPowerChart.setOption(option);
+    }
+  }, {
+    deep: true
+  })
   let powerStaticRef = ref(null);
   const instance = getCurrentInstance();
   const $echarts = instance?.appContext.config.globalProperties.$echarts;
@@ -12,7 +47,7 @@
       trigger: 'axis'
     },
     legend: {
-      data: ['充电量', '充电时长', '充电功率']
+      data: ['']
     },
     grid: {
       left: '3%',
@@ -20,15 +55,10 @@
       bottom: '3%',
       containLabel: true
     },
-    toolbox: {
-      // feature: {
-      //   saveAsImage: {}
-      // }
-    },
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00']
+      data: ['']
     },
     yAxis: {
       type: 'value'
@@ -38,23 +68,28 @@
         name: '充电量',
         type: 'line',
         stack: 'Total',
-        data: [120, 132, 101, 134, 90, 230, 210]
+        data: [0]
       },
       {
         name: '充电时长',
         type: 'line',
         stack: 'Total',
-        data: [220, 182, 191, 234, 290, 330, 310]
+        data: [0]
       },
       {
         name: '充电功率',
         type: 'line',
         stack: 'Total',
-        data: [150, 232, 201, 154, 190, 330, 410]
+        data: [0]
       }
     ]
   };
   onMounted(() => {
+   option.legend.data = props.lenged;
+    option.xAxis.data = props.category;
+    option.series[0].data = props.record.charges;
+    option.series[1].data = props.record.chargeTime;
+    option.series[2].data = props.record.chargeRate;
     if (powerStaticRef.value) {
       let myPowerChart = $echarts.init(powerStaticRef.value)
       option && myPowerChart.setOption(option);

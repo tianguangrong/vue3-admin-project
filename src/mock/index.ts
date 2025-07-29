@@ -4,6 +4,22 @@ import Mock from 'mockjs';
 Mock.setup({
   timeout: '200-900'
 })
+Mock.mock('https://www.demo.com/api/get-power-static', 'get', ()=> {
+  return {
+      code: 200,
+      message: 'success',
+      data: {
+        legend: ['充电量', '充电时长', '充电功率'],
+        category:['13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'],
+        record: {
+          charges: [120, 132, 101, 134, 90, 230, 210],
+          chargeTime: [220, 182, 191, 234, 290, 330, 310],
+          chargeRate: [150, 232, 201, 154, 190, 330, 410],
+        }
+      }
+    }
+
+})
 Mock.mock('https://www.demo.com/api/get-device-sumary', 'get', () => {
   return {
       code: 200,
