@@ -4,6 +4,44 @@ import Mock from 'mockjs';
 Mock.setup({
   timeout: '200-900'
 })
+Mock.mock('https://www.demo.com/api/income-static', 'get', (options: any) => {
+  return {
+    code: 200,
+    message: 'success',
+    data: [
+      {
+        city: '广州',
+        income: 52457,
+        type: 'up',
+        percent: '24%'
+      },
+      {
+        city: '上海',
+        income: 323234,
+        type: 'down',
+        percent: '24%'
+      },
+      {
+        city: '佛山',
+        income: 74569,
+        type: 'down',
+        percent: '25%'
+      },
+      {
+        city: '珠海',
+        income: 17540,
+        type: 'up',
+        percent: '24%'
+      },
+      {
+        city: '深圳',
+        income: 989521,
+        type: 'down',
+        percent: '21%'
+      },
+    ]
+  }
+})
 Mock.mock('https://www.demo.com/api/get-power-static', 'get', ()=> {
   return {
       code: 200,
@@ -18,7 +56,6 @@ Mock.mock('https://www.demo.com/api/get-power-static', 'get', ()=> {
         }
       }
     }
-
 })
 Mock.mock('https://www.demo.com/api/get-device-sumary', 'get', () => {
   return {

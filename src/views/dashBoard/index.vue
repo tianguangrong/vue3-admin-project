@@ -11,7 +11,8 @@
   import jiu from '@/assets/imgs/9.png'
   import Rador from './comps/rador.vue'
   import http from '@/utils/http';
-  import { ref, reactive } from  'vue'
+  import { ref, reactive } from  'vue';
+  import incomeStatics from './comps/incomeStatics.vue';
   import PowerStatics from './comps/powerStatics.vue';
   import type { Tlenget, TData, ICategory, IDeviceDataRes, IMixResponse, ICharge } from '@/types/dashBoard';
   let getLegend = ref<Tlenget>([]);
@@ -146,7 +147,9 @@
         <template v-slot:header>设备总览</template>
         <Rador :legend="getLegend" :record="getDeviceData" :category="getCategory"/>
       </el-card>
-      <el-card class="sale-static"></el-card>
+      <el-card class="sale-static">
+        <incomeStatics/>
+      </el-card>
       <el-card class="alarm-datas"></el-card>
     </el-col>
   </el-row>
@@ -248,6 +251,9 @@
       .sale-static {
         flex: 1;
         margin: 12px 0;
+        :deep(.el-card__body) {
+          padding: 0 !important;
+        }
       }
       .alarm-datas {
         flex: 1;
