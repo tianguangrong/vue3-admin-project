@@ -1,14 +1,14 @@
 <script setup lang="ts" name="IncomeItem">
-  import { ref, reactive,withDefaults } from 'vue';
-  interface IincomeDatas {
+  import { ref, reactive, withDefaults } from 'vue';
+  interface IicomeType<T> {
+    item: T;
+    index: number
+  }
+ interface IincomeDatas {
     city: string;
     percent: string;
     income: number;
     type: string;
-  }
-  interface IicomeType<T> {
-    item: T;
-    index: number
   }
   withDefaults(defineProps<IicomeType<IincomeDatas>>(), {
     index: 1,
@@ -29,7 +29,7 @@
   <div class="item">{{ item.city }}</div>
   <div class="fill-remain-space"></div>
   <div class="item">{{ item.income }}</div>
-  <div class="item">
+  <div class="item" style="display: flex;">
     <span>{{ item.percent }}</span>
     <template v-if="item.type === 'up'">
       <el-icon color="green">
@@ -62,5 +62,8 @@
      .item {
       width: 60px;
      }
+  }
+  .income-item:nth-child(even) {
+    background: rgb(227, 235, 245);
   }
 </style>

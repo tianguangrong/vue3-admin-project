@@ -16,3 +16,14 @@
     chargeRate: TData
   }
   export type  IMixResponse = IDeviceDataRes<string[], ICharge, string[]>
+  
+  export interface IicomeType<T> {
+    item: T;
+    index: number;
+  }
+  export interface IincomeDatas {
+    city: string;
+    percent: string;
+    income: number;
+    type: string;
+  }

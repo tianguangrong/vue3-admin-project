@@ -39,6 +39,12 @@ Mock.mock('https://www.demo.com/api/income-static', 'get', (options: any) => {
         type: 'down',
         percent: '21%'
       },
+      {
+        city: '唐山',
+        income: 779521,
+        type: 'up',
+        percent: '14%'
+      },
     ]
   }
 })

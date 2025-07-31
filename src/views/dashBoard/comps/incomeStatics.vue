@@ -1,17 +1,25 @@
 <script setup lang="ts" name="IncomeStatics">
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, getCurrentInstance } from 'vue';
+  import http from '@/utils/http'
   import incomeItem from './incomeItem.vue';
-  const item = {
-        city: '上海',
-        income: 456453,
-        percent: '24%',
-        type: 'up'
+  import type { IicomeType, IincomeDatas } from '@/types/dashBoard';
+
+  let incomeDatas = reactive<IincomeDatas[]>([])
+  const getIncomesDatas = async () => {
+    const res = await http.get('/api/income-static')
+    if (res.data) {
+      const results = res.data as IincomeDatas[]
+      for (const item of results) {
+        incomeDatas.push(item)
+      };
+    }
   }
+  getIncomesDatas()
 </script>
 
 <template>
   <div class="title">营收统计</div>
-  <incomeItem :item="item" :index="1" />
+  <incomeItem v-for="(item, index) in incomeDatas" :key="item.city" :item="item" :index="index+1" />
 </template>
 
 <style lang="less" scoped>
