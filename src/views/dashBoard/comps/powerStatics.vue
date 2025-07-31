@@ -1,7 +1,7 @@
 <script setup lang="ts" name="PowerStatics">
 
   import { ref, watch, onMounted, getCurrentInstance, type PropType } from 'vue';
-  import type { Tlenget, TData, ICategory, IDeviceDataRes, IMixResponse, ICharge } from '@/types/dashBoard';
+  import type { Tlenget, ICharge } from '@/types/dashBoard';
   
   const props = defineProps({
     lenged: {

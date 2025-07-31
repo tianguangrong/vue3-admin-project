@@ -40,7 +40,10 @@
   getPowerStatic().then(result => {
     if (result) {
       getPowerLegend.value = result.legend;
-      getPowerCategory = result.category;
+      // getPowerCategory = result.category;
+      for (const item of result.category) {
+        getPowerCategory.push(item)
+      }
       getPowerData.value = result.record;
     }
   })
