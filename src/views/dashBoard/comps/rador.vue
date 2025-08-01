@@ -27,7 +27,7 @@
                 data: [
                     {
                         value: [0],
-                        name: ''
+                        name: '',
                     },
                 ]
             }
