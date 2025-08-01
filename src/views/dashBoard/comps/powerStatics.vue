@@ -104,7 +104,10 @@
 
 <style lang="less" scoped>
 .power-static-content {
-  width: 100%;
-  height: 100%;
+  flex: 1;
+  flex-shrink: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 </style>

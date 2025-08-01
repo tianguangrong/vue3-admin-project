@@ -203,6 +203,7 @@
       .used-content {
         margin: 12px 0;
         display: flex;
+        flex: 1;
         align-items: center;
         justify-content: space-around;
         :deep(.el-card__body) {
@@ -229,10 +230,15 @@
         }
       }
       .statics-content {
-        flex: 1;
+        width: auto;
+        height: 460px;
+        overflow: hidden;
+        flex-shrink: 0;
         :deep(.el-card__body) {
+          width: auto;
           height: 100%;
           display: flex;
+          overflow: hidden;
           flex-direction: column;
           box-sizing: border-box;
         }

@@ -43,6 +43,8 @@ import AsideMenu from '@/components/asideMenu/index.vue';
     }
     .main-content {
       width: 100%;
+      height: calc(100vh - 60px);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       .el-main {
