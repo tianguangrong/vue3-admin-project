@@ -1,17 +1,14 @@
 <script setup lang="ts" name="Rador">
-    import { ref, getCurrentInstance, onMounted, watchEffect } from 'vue';
-    import type { Tlenget, TData, ICategory, IDeviceDataRes } from '@/types/dashBoard';
+    import { ref, onMounted, watchEffect } from 'vue';
+    import type { Tlenget, TData, ICategory } from '@/types/dashBoard';
+    import { useChart } from '@/hooks/useCharts';
     const props = defineProps<{
         legend: Tlenget,
         record: TData,
         category: ICategory[]
     }>();
-    console.log('props', props);
-    
     const radorRef = ref(null);
-    const instance = getCurrentInstance();
-    const $echarts = instance?.appContext.config.globalProperties.$echarts;
-    const option = {
+    const option = ref({
         legend: {
             data: [''],
             left: 'left'
@@ -32,22 +29,17 @@
                 ]
             }
         ]
-    };
+    });
+    const { initCharts } = useChart(radorRef, option)
     watchEffect(() => {
         if (props.record.length) {
-            option.legend.data = props.legend;
-            option.radar.indicator = props.category;
-            option.series[0].data[0].value = props.record;
-            option.series[0].data[0].name = props.legend[0];
-            if (radorRef.value) {
-                const radorEchart = $echarts.init(radorRef.value)
-                option && radorEchart.setOption(option)
-                
-            }
+            option.value.legend.data = props.legend;
+            option.value.radar.indicator = props.category;
+            option.value.series[0].data[0].value = props.record;
+            option.value.series[0].data[0].name = props.legend[0];
+            initCharts()
         }
-    })
-    onMounted(() => {
-    })
+    });
 </script>
 
 <template>

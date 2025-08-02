@@ -14,7 +14,8 @@ Mock.mock('https://www.demo.com/api/alarm-static', 'get', (options: any) => {
         timestamp: '2025-08-02 20:46',
         size: 'large',
         type: 'primary',
-        icon: 'MoreFilled',
+        icon: 'BellFilled',
+        color: '#bd2843ff',
       },
       {
         content: '迁安建安路口中国石化通讯异常',
