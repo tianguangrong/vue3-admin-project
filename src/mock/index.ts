@@ -4,6 +4,37 @@ import Mock from 'mockjs';
 Mock.setup({
   timeout: '200-900'
 })
+Mock.mock('https://www.demo.com/api/alarm-static', 'get', (options: any) => {
+  return {
+    code: 200,
+    message: 'success',
+    data: [
+      {
+        content: '迁西县高速路口中国石化通讯中断',
+        timestamp: '2025-08-02 20:46',
+        size: 'large',
+        type: 'primary',
+        icon: 'MoreFilled',
+      },
+      {
+        content: '迁安建安路口中国石化通讯异常',
+        timestamp: '2025-07-23 20:46',
+        color: '#0bbd87',
+      },
+      {
+        content: '迁西火箭源路中国石化通讯异常',
+        timestamp: '2025-04-03 20:46',
+        size: 'large',
+        color: '#0bbd87',
+      },
+      {
+        content: '迁西西环路路中国石化通讯异常',
+        timestamp: '2025-04-03 20:46',
+        size: 'large',
+      },
+    ]
+  }
+})
 Mock.mock('https://www.demo.com/api/income-static', 'get', (options: any) => {
   return {
     code: 200,
@@ -44,6 +75,30 @@ Mock.mock('https://www.demo.com/api/income-static', 'get', (options: any) => {
         income: 779521,
         type: 'up',
         percent: '14%'
+      },
+      {
+        city: '迁安',
+        income: 17540,
+        type: 'up',
+        percent: '35%'
+      },
+      {
+        city: '四川',
+        income: 989521,
+        type: 'down',
+        percent: '21%'
+      },
+      {
+        city: '合肥',
+        income: 779521,
+        type: 'dowm',
+        percent: '9%'
+      },
+      {
+        city: '武汉',
+        income: 17540,
+        type: 'up',
+        percent: '24%'
       },
     ]
   }

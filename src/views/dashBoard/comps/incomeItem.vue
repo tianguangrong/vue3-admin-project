@@ -30,7 +30,7 @@
   <div class="fill-remain-space"></div>
   <div class="item">{{ item.income }}</div>
   <div class="item" style="display: flex;">
-    <span>{{ item.percent }}</span>
+    <div class="per-box">{{ item.percent }}</div>&nbsp;
     <template v-if="item.type === 'up'">
       <el-icon color="green">
         <CaretTop />
@@ -60,7 +60,10 @@
       width: 40px;
      }
      .item {
-      width: 60px;
+      min-width: 68px;
+      .per-box {
+        min-width: 30px;
+      }
      }
   }
   .income-item:nth-child(even) {

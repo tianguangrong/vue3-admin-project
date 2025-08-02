@@ -12,8 +12,9 @@
   import Rador from './comps/rador.vue'
   import http from '@/utils/http';
   import { ref, reactive } from  'vue';
-  import incomeStatics from './comps/incomeStatics.vue';
+  import IncomeStatics from './comps/incomeStatics.vue';
   import PowerStatics from './comps/powerStatics.vue';
+  import FaultAlarm from './comps/faultAlarm.vue';
   import type { Tlenget, TData, ICategory, IDeviceDataRes, IMixResponse, ICharge } from '@/types/dashBoard';
   let getLegend = ref<Tlenget>([]);
   let getCategory = reactive<ICategory[]>([]);
@@ -153,7 +154,9 @@
       <el-card class="sale-static">
         <incomeStatics/>
       </el-card>
-      <el-card class="alarm-datas"></el-card>
+      <el-card class="alarm-datas">
+        <faultAlarm />
+      </el-card>
     </el-col>
   </el-row>
 
@@ -262,10 +265,19 @@
         margin: 12px 0;
         :deep(.el-card__body) {
           padding: 0 !important;
+          height: 100%;
+          overflow: hidden;
         }
       }
       .alarm-datas {
-        flex: 1;
+        width: auto;
+        height: 420px;
+        flex-shrink: 0;
+        &>:deep(.el-card__body) {
+          padding: 0 !important;
+          height: 100%;
+          overflow: hidden;
+        }
       }
     }
   }
