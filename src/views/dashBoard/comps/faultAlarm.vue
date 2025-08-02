@@ -26,6 +26,7 @@
                 <el-timeline style="max-width: 600px">
                     <el-timeline-item
                         v-for="(activity, index) in alarmDatas"
+                         placement="top"
                         :key="index"
                         :icon="activity.icon"
                         :type="activity.type"
