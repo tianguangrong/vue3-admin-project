@@ -45,19 +45,22 @@ Mock.mock('https://www.demo.com/api/income-static', 'get', (options: any) => {
         city: '广州',
         income: 52457,
         type: 'up',
-        percent: '24%'
+        percent: '24%',
+        color: '#67C23A',
       },
       {
         city: '上海',
         income: 323234,
         type: 'down',
-        percent: '24%'
+        percent: '24%',
+        color: '#E6A23C'
       },
       {
         city: '佛山',
         income: 74569,
         type: 'down',
-        percent: '25%'
+        percent: '25%',
+        color: 'rgb(200, 201, 204)'
       },
       {
         city: '珠海',

@@ -26,4 +26,5 @@
     percent: string;
     income: number;
     type: string;
+    color?: string
   }

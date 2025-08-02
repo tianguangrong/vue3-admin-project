@@ -25,7 +25,15 @@
 
 <template>
 <div class="income-item">
-  <div class="index">{{ index }}</div>
+  <div class="index">
+    <span 
+      v-if="'color' in item" 
+      :class="{'circle-index': ('color' in item)}"
+      :style="{'background': (('color' in item) ? item.color as string : '')}">
+      {{ index }}
+    </span>
+    <sub v-else>{{ index }}</sub>
+  </div>
   <div class="item">{{ item.city }}</div>
   <div class="fill-remain-space"></div>
   <div class="item">{{ item.income }}</div>
@@ -58,6 +66,17 @@
     padding-left: 8px;
      .index {
       width: 40px;
+      .circle-index {
+        border-radius: 50%;
+        display: block;
+        width: 16px;
+        height: 16px;
+        color: #ffffff;
+        text-align: center;
+        line-height: 16px;
+        position: relative;
+        left: -4px;
+      }
      }
      .item {
       min-width: 68px;
