@@ -1,14 +1,14 @@
 <script setup lang="ts" name="DashBoard">
   import SumItem from './comps/sumItem.vue';
-  import one from '@/assets/imgs/1.png'
-  import two from '@/assets/imgs/2.png'
-  import three from '@/assets/imgs/1753530122187(1).png'
-  import four from '@/assets/imgs/4.png'
-  import wu from '@/assets/imgs/5.png'
-  import liu from '@/assets/imgs/6.png'
-  import qi from '@/assets/imgs/7.png'
-  import ba from '@/assets/imgs/8.png'
-  import jiu from '@/assets/imgs/9.png'
+  import one from '@/assets/imgs/repair.png'
+  import two from '@/assets/imgs/daily.png'
+  import three from '@/assets/imgs/progress.png'
+  import four from '@/assets/imgs/total.png'
+  import wu from '@/assets/imgs/money.png'
+  import liu from '@/assets/imgs/remain.png'
+  import seven from '@/assets/imgs/flash.png'
+  import eight from '@/assets/imgs/flash2.png'
+  import nine from '@/assets/imgs/flash3.png'
   import Rador from './comps/rador.vue'
   import http from '@/utils/http';
   import { ref, reactive } from  'vue';
@@ -89,7 +89,7 @@
         </div>
         <div class="content">
           <div class="sum-item">
-            <sum-item :val="5" title="充电桩使用率：" color="green" :imgSrc="one">
+            <sum-item :val="5" title="充电桩使用率：" color="green" :imgSrc="seven">
               <template v-slot:rateData>
                 <h2>72 / 95</h2>
               </template>
@@ -98,7 +98,7 @@
           </div>
           <div class="fill-remaining-space"></div>
           <div class="sum-item">
-            <sum-item :val="22" title="充电柜使用率：" color="red" :imgSrc="two">
+            <sum-item :val="22" title="充电柜使用率：" color="red" :imgSrc="eight">
               <template v-slot:rateData>
                 <h2>655 / 1233</h2>
               </template>
@@ -107,7 +107,7 @@
           </div>
           <div class="fill-remaining-space"></div>
           <div class="sum-item">
-            <sum-item :val="49" title="充电站使用率：" color="green" :imgSrc="three">
+            <sum-item :val="49" title="充电站使用率：" color="green" :imgSrc="nine">
               <template #rateData>
                 <h2>2263 / 3398</h2>
               </template>
@@ -118,27 +118,27 @@
       </el-card>
       <el-card class="used-content">
         <div class="used-item">
-          <img :src="four" width="60px" alt="">
+          <img :src="one" width="60px" alt="">
           <div>设备维修</div>
         </div>
         <div class="used-item">
-          <img :src="wu" width="60px" alt="">
+          <img :src="two" width="60px" alt="">
           <div>每日日报</div>
         </div>
         <div class="used-item">
-          <img :src="liu" width="60px" alt="">
+          <img :src="three" width="60px" alt="">
           <div>任务进度</div>
         </div>
         <div class="used-item">
-          <img :src="qi" width="60px" alt="">
+          <img :src="four" width="60px" alt="">
           <div>营收占比</div>
         </div>
         <div class="used-item">
-          <img :src="ba" width="60px" alt="">
+          <img :src="wu" width="60px" alt="">
           <div>营收统计</div>
         </div>
         <div class="used-item">
-          <img :src="jiu" width="60px" alt="">
+          <img :src="liu" width="60px" alt="">
           <div>待办事项</div>
         </div>
       </el-card>
