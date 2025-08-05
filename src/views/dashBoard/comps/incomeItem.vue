@@ -1,5 +1,5 @@
 <script setup lang="ts" name="IncomeItem">
-  import { ref, reactive, withDefaults } from 'vue';
+  import { ref, reactive } from 'vue';
   interface IicomeType<T> {
     item: T;
     index: number
