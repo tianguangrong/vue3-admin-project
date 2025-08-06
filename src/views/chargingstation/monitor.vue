@@ -1,6 +1,6 @@
 <script setup lang="ts" name="Monitor">
   import { reactive, ref } from 'vue';
-  import type { FormInstance} from 'element-plus'
+  import type { FormInstance, ComponentSize} from 'element-plus'
   interface IMonitorForm {
     searchByNameOrId: string;
     searchType: string;
@@ -51,6 +51,44 @@
     form.searchType = '2'
     changeIputsearchType(form.searchType)
   }
+  // 表格逻辑
+  interface ItableColumnType {
+    date: string
+    name: string
+    address: string
+  }
+  let tableData = reactive<ItableColumnType[]>([
+    {
+      date: '2016-05-03',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-02',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-04',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+  ]);
+  const currentPage = ref(4);
+  const pageSize = ref(100);
+  const background = ref(false);
+  const size = ref<ComponentSize>('default')
+  const handleSizeChange = (val: number) => {
+    console.log(`${val} items per page`)
+  }
+  const handleCurrentChange = (val: number) => {
+    console.log(`current page: ${val}`)
+  }
 </script>
 
 <template>
@@ -97,13 +135,78 @@
       </el-form>
     
     </div>
-    <div class="opera-content"></div>
-    <div class="list-content"></div>
-    <div class="pagination-content"></div>
+    <div class="intro-content">
+      <div class="item">
+        <span>累计充电量(度)</span>
+        <h3>97,556,425</h3>
+      </div>
+      <div class="fill-remaining-space"></div>
+      <div class="item">
+        <span>累计充电次数(次)</span>
+        <h3>1,6572</h3>
+      </div>
+      <div class="fill-remaining-space"></div>
+      <div class="item">
+        <span>服务区域(个)</span>
+        <h3>123</h3>
+      </div>
+    </div>
+    <div class="opera-content">
+      <el-button type="primary">
+        <el-icon><Plus /></el-icon>
+        新增充电站
+      </el-button>
+    </div>
+    <div class="list-content">
+      <el-table :data="tableData" height="100%">
+        <el-table-column label="日期">
+          <template #default="scope">
+            <div >
+              <el-icon><timer /></el-icon>
+              <span>{{ scope.row.date }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="姓名" >
+          <template #default="scope">
+            {{ scope.row.name }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="180">
+          <template #default="scope">
+            <el-button type="primary" size="small">
+              编辑
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+            >
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="pagination-content">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[100, 200, 300, 400]"
+        :size="size"
+        :background="background"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="400"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
 <style lang="less" scoped>
+.fill-remaining-space {
+  flex: 1;
+}
 .monitor-container {
   width: 100%;
   height: 100%;
@@ -113,7 +216,7 @@
   box-shadow: var(--el-box-shadow-light);
   &>div {
     box-shadow: var(--el-box-shadow-light);
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
   &>div:last-child {
     margin-bottom: 0px;
@@ -138,12 +241,36 @@
     flex-shrink: 0;
     padding: 0 12px;
   }
+  .intro-content{
+    width: auto;
+    height: 60px;
+    display: flex;
+    box-sizing: border-box;
+    padding-top: 6px;
+    .item {
+      width: 120px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
   .opera-content {
     width: auto;
     height: 50px;
+    display: flex;
+    padding: 0 12px;
+    align-items: center;
   }
   .list-content {
     flex: 1;
+    width: 100%;
+    overflow: hidden;
+  }
+  .pagination-content {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>
