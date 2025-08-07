@@ -1,6 +1,6 @@
 <script setup lang="ts" name="Monitor">
   import { reactive, ref } from 'vue';
-  import type { FormInstance, ComponentSize} from 'element-plus'
+  import type { FormInstance, ComponentSize} from 'element-plus';
   interface IMonitorForm {
     searchByNameOrId: string;
     searchType: string;
@@ -16,6 +16,18 @@
   const onSubmit = () => {
     console.log('submit!')
   }
+  /**
+   * name: "北京西单充电站",
+    id: "VXZ10001",
+    city: "北京",
+    fast: 95,
+    slow: 40,
+    status: 3,
+    now: 10,
+    fault: 1,
+    person: "张伟",
+    tel: 17876554801
+   */
   const options = [
     {
       value: 1,
@@ -53,32 +65,103 @@
   }
   // 表格逻辑
   interface ItableColumnType {
-    date: string
-    name: string
-    address: string
+    id: string;
+    city: string;
+    fast: number;
+    slow: number;
+    status: number;
+    now: number;
+    fault: number;
+    person: string;
+    tel: number;
   }
-  let tableData = reactive<ItableColumnType[]>([
+  const tableColumns = [
     {
-      date: '2016-05-03',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
+      prop: 'name',
+      label: '站点名称',
+      fixed: true,
+      minWidth: '140',
+      showTooltip: false,
     },
     {
-      date: '2016-05-02',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
+      prop: 'id',
+      label: '站点ID',
+      fixed: false,
+      showTooltip: false,
     },
     {
-      date: '2016-05-04',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
+      prop: 'city',
+      label: '所属城市',
+      fixed: false,
+      width: '120',
+      showTooltip: false,
     },
     {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
+      prop: 'fast',
+      label: '快充数',
+      fixed: false,
+      minWidth: '100',
+      showTooltip: false,
     },
-  ]);
+    {
+      prop: 'slow',
+      label: '慢充数',
+      fixed: false,
+      width: '100',
+      showTooltip: false,
+    },
+    {
+      prop: 'status',
+      label: '状态',
+      slot: true,
+      fixed: false,
+      width: '90',
+      showTooltip: false,
+    },
+    {
+      prop: 'now',
+      label: '正在充电',
+      fixed: false,
+      minWidth: '100',
+      showTooltip: false,
+    },
+    {
+      prop: 'fault',
+      label: '故障数',
+      fixed: false,
+      minWidth: '100',
+      showTooltip: false,
+    },
+    {
+      prop: 'person',
+      label: '责任人',
+      fixed: false,
+      minWidth: '100',
+      showTooltip: false,
+    },
+    {
+      prop: '责任人电话',
+      label: 'Tel',
+      fixed: false,
+      width:'120',
+      showTooltip: false,
+    },
+  ]
+  let tableData = reactive<ItableColumnType[]>([]);
+  const tableRowClassName = ({
+    row,
+    rowIndex,
+  }: {
+    row: ItableColumnType
+    rowIndex: number
+  }) => {
+    if (rowIndex === 1) {
+      return 'warning-row'
+    } else if (rowIndex === 3) {
+      return 'success-row'
+    }
+    return ''
+  }
   const currentPage = ref(4);
   const pageSize = ref(100);
   const background = ref(false);
@@ -89,6 +172,7 @@
   const handleCurrentChange = (val: number) => {
     console.log(`current page: ${val}`)
   }
+  ///api/stationList
 </script>
 
 <template>
@@ -158,33 +242,29 @@
       </el-button>
     </div>
     <div class="list-content">
-      <el-table :data="tableData" height="100%">
-        <el-table-column label="日期">
+      <el-table :data="tableData"  :row-class-name="tableRowClassName" height="100%">
+      <el-table-column fixed type="index" label="序号" width="62" />
+      <template v-for="item of tableColumns">
+        <el-table-column v-if="item.slot" :key="item.prop" :fixed="item.fixed" :prop="item.prop" :label="item.label" :min-width="item.minWidth || ''" :width="item.width || ''"/>
+        <el-table-column v-else :label="item.label" :min-width="item.minWidth || ''" :width="item.width|| ''">
           <template #default="scope">
-            <div >
-              <el-icon><timer /></el-icon>
-              <span>{{ scope.row.date }}</span>
-            </div>
+            {{ scope.row.prop }}
           </template>
         </el-table-column>
-        <el-table-column label="姓名" >
-          <template #default="scope">
-            {{ scope.row.name }}
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="180">
-          <template #default="scope">
-            <el-button type="primary" size="small">
-              编辑
-            </el-button>
-            <el-button
-              size="small"
-              type="danger"
-            >
-              删除
-            </el-button>
-          </template>
-        </el-table-column>
+      </template>
+      <el-table-column label="操作" width="100">
+        <template #default="scope">
+          <el-button type="primary" size="small">
+            编辑
+          </el-button>
+          <el-button
+            size="small"
+            type="danger"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
       </el-table>
     </div>
     <div class="pagination-content">
@@ -272,5 +352,11 @@
     display: flex;
     justify-content: flex-end;
   }
+}
+:deep(.el-table .warning-row) {
+  --el-table-tr-bg-color: var(--el-color-warning-light-9);
+}
+:deep(.el-table .success-row){
+  --el-table-tr-bg-color: var(--el-color-success-light-9);
 }
 </style>
