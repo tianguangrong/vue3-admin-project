@@ -163,8 +163,7 @@
     return ''
   }
   const currentPage = ref(4);
-  const pageSize = ref(100);
-  const background = ref(false);
+  const pageSize = ref(20);
   const size = ref<ComponentSize>('default')
   const handleSizeChange = (val: number) => {
     console.log(`${val} items per page`)
@@ -271,9 +270,9 @@
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
-        :page-sizes="[100, 200, 300, 400]"
+        :page-sizes="[20, 50, 80]"
         :size="size"
-        :background="background"
+        background
         layout="total, sizes, prev, pager, next, jumper"
         :total="400"
         @size-change="handleSizeChange"
