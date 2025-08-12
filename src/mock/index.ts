@@ -573,7 +573,7 @@ Mock.mock("https://www.demo.com/api/stationList", 'post', (options: any) => {
   if (name) {
     chargingStation = chargingStation.filter(item => item.name.includes(name));
   }
-  if (status != 1) {
+  if (status && status != 1) {
     chargingStation = chargingStation.filter(item => item.status === status);
   }
   // 实现分页

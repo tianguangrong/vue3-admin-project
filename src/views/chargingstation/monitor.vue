@@ -1,6 +1,8 @@
 <script setup lang="ts" name="Monitor">
-  import { reactive, ref } from 'vue';
-  import type { FormInstance, ComponentSize} from 'element-plus';
+  import { onMounted, reactive, ref } from 'vue';
+  import type { FormInstance, ComponentSize } from 'element-plus';
+  import { ElNotification } from 'element-plus'
+  import http from '@/utils/http';
   interface IMonitorForm {
     searchByNameOrId: string;
     searchType: string;
@@ -13,21 +15,7 @@
   })
   let plher = ref<string>('ID');
   let ruleFormRef = ref<FormInstance>();
-  const onSubmit = () => {
-    console.log('submit!')
-  }
-  /**
-   * name: "北京西单充电站",
-    id: "VXZ10001",
-    city: "北京",
-    fast: 95,
-    slow: 40,
-    status: 3,
-    now: 10,
-    fault: 1,
-    person: "张伟",
-    tel: 17876554801
-   */
+  let loading = ref(false)
   const options = [
     {
       value: 1,
@@ -60,8 +48,10 @@
   const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields();
-    form.searchType = '2'
-    changeIputsearchType(form.searchType)
+    form.searchType = '2';
+    currentPage.value = 1;
+    changeIputsearchType(form.searchType);
+    monitorDatas();
   }
   // 表格逻辑
   interface ItableColumnType {
@@ -79,7 +69,7 @@
     {
       prop: 'name',
       label: '站点名称',
-      fixed: true,
+      fixed: false,
       minWidth: '140',
       showTooltip: false,
     },
@@ -87,27 +77,28 @@
       prop: 'id',
       label: '站点ID',
       fixed: false,
+      minWidth: '110',
       showTooltip: false,
     },
     {
       prop: 'city',
       label: '所属城市',
       fixed: false,
-      width: '120',
+      // width: '100',
       showTooltip: false,
     },
     {
       prop: 'fast',
       label: '快充数',
       fixed: false,
-      minWidth: '100',
+      // minWidth: '100',
       showTooltip: false,
     },
     {
       prop: 'slow',
       label: '慢充数',
       fixed: false,
-      width: '100',
+      // width: '100',
       showTooltip: false,
     },
     {
@@ -122,55 +113,88 @@
       prop: 'now',
       label: '正在充电',
       fixed: false,
-      minWidth: '100',
+      // minWidth: '100',
       showTooltip: false,
     },
     {
       prop: 'fault',
       label: '故障数',
       fixed: false,
-      minWidth: '100',
+      // minWidth: '100',
       showTooltip: false,
     },
     {
       prop: 'person',
       label: '责任人',
       fixed: false,
-      minWidth: '100',
+      // minWidth: '100',
       showTooltip: false,
     },
     {
-      prop: '责任人电话',
-      label: 'Tel',
+      prop: 'tel',
+      label: '责任人电话',
       fixed: false,
       width:'120',
       showTooltip: false,
     },
   ]
-  let tableData = reactive<ItableColumnType[]>([]);
-  const tableRowClassName = ({
-    row,
-    rowIndex,
-  }: {
-    row: ItableColumnType
-    rowIndex: number
-  }) => {
-    if (rowIndex === 1) {
-      return 'warning-row'
-    } else if (rowIndex === 3) {
-      return 'success-row'
-    }
-    return ''
-  }
-  const currentPage = ref(4);
-  const pageSize = ref(20);
+  let tableData = ref<ItableColumnType[]>([]);
+  const currentPage = ref(1);
+  const pageSize = ref(10);
+  let total = ref(0)
   const size = ref<ComponentSize>('default')
-  const handleSizeChange = (val: number) => {
-    console.log(`${val} items per page`)
+  const onSubmit = () => {
+    monitorDatas();
   }
-  const handleCurrentChange = (val: number) => {
-    console.log(`current page: ${val}`)
+  const handleSizeChange = () => {
+    monitorDatas();
   }
+  const handleCurrentChange = () => {
+    monitorDatas();
+  }
+  const monitorDatas = async () => {
+    loading.value = true
+    const datas = {
+      pageSize: pageSize.value,
+      page: currentPage.value,
+      id: +form.searchType === 2 ? form.searchByNameOrId.trim() : null,
+      name: +form.searchType === 1 ? form.searchByNameOrId.trim() : null,
+      status: ''
+    }
+    try {
+      const {code: v_200, data } = await http.post('/api/stationList', datas);
+      if (+v_200 === 200 && data) {
+        const { list, total: t_number } = data as  { list: any, total: number };
+        tableData.value = list;
+        total.value = t_number;
+        console.log(list);
+        // ElNotification({
+        //   title: 'Success',
+        //   message: '获取数据成功',
+        //   type: 'success',
+        // })
+      } else {
+        ElNotification({
+          title: 'Warning',
+          message: '接口请求数据错误',
+          type: 'warning',
+        })
+      }
+      loading.value = false
+    } catch (error) {
+      ElNotification({
+        title: 'Error',
+        message: '接口请求异常',
+        type: 'error',
+      })
+      loading.value = false
+    }
+    
+    
+  }
+  onMounted(() => {
+    monitorDatas();
+  })
   ///api/stationList
 </script>
 
@@ -240,41 +264,41 @@
         新增充电站
       </el-button>
     </div>
-    <div class="list-content">
-      <el-table :data="tableData"  :row-class-name="tableRowClassName" height="100%">
-      <el-table-column fixed type="index" label="序号" width="62" />
-      <template v-for="item of tableColumns">
-        <el-table-column v-if="item.slot" :key="item.prop" :fixed="item.fixed" :prop="item.prop" :label="item.label" :min-width="item.minWidth || ''" :width="item.width || ''"/>
-        <el-table-column v-else :label="item.label" :min-width="item.minWidth || ''" :width="item.width|| ''">
+    <div class="list-content" v-loading="loading">
+      <el-table :data="tableData"  stripe style="width: 99.8%" height="99.8%">
+        <el-table-column type="index" label="序号" width="62" />
+        <template v-for="item of tableColumns">
+          <el-table-column v-if="!item.slot" :key="item.prop" :fixed="item.fixed" :prop="item.prop" :label="item.label" :min-width="item.minWidth || ''" :width="item.width || ''"/>
+          <el-table-column v-else :label="item.label" :min-width="item.minWidth || ''" :width="item.width|| ''">
+            <template #default="{row}">
+              {{ row[item.prop] }}
+            </template>
+          </el-table-column>
+        </template>
+        <el-table-column fixed="right" label="操作" width="148">
           <template #default="scope">
-            {{ scope.row.prop }}
+            <el-button type="primary" size="small">
+              编辑
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
-      </template>
-      <el-table-column label="操作" width="100">
-        <template #default="scope">
-          <el-button type="primary" size="small">
-            编辑
-          </el-button>
-          <el-button
-            size="small"
-            type="danger"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
       </el-table>
     </div>
     <div class="pagination-content">
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
-        :page-sizes="[20, 50, 80]"
+        :page-sizes="[10, 20, 50]"
         :size="size"
         background
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -344,7 +368,7 @@
   }
   .list-content {
     flex: 1;
-    width: 100%;
+    // width: 100%;
     overflow: hidden;
   }
   .pagination-content {
