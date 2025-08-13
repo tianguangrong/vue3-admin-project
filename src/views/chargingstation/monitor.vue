@@ -1,8 +1,9 @@
 <script setup lang="ts" name="Monitor">
-  import { onMounted, reactive, ref } from 'vue';
+  import { onMounted, reactive, ref, type Reactive, type Ref } from 'vue';
   import type { FormInstance, ComponentSize } from 'element-plus';
   import { ElNotification } from 'element-plus'
   import http from '@/utils/http';
+  import addMonitor from './comps/addMonitor.vue';
   interface IMonitorForm {
     searchByNameOrId: string;
     searchType: string;
@@ -56,6 +57,7 @@
   // 表格逻辑
   interface ItableColumnType {
     id: string;
+    name: string,
     city: string;
     fast: number;
     slow: number;
@@ -167,12 +169,6 @@
         const { list, total: t_number } = data as  { list: any, total: number };
         tableData.value = list;
         total.value = t_number;
-        console.log(list);
-        // ElNotification({
-        //   title: 'Success',
-        //   message: '获取数据成功',
-        //   type: 'success',
-        // })
       } else {
         ElNotification({
           title: 'Warning',
@@ -195,6 +191,25 @@
   onMounted(() => {
     monitorDatas();
   })
+  // 删除数据
+  const handleConfirmDelete = (row: Reactive<ItableColumnType>) => {
+    console.log(row.name);
+    
+  }
+  // 新增充电站
+  const addRef = ref<{
+    centerDialogVisible: Ref<boolean>
+  } | null>(null);
+  const m_title = ref('新增充电站')
+  const handleAddMonitor = () => {
+    console.log(addRef.value?.centerDialogVisible);
+    m_title.value = '新增充电站'
+    addRef.value!.centerDialogVisible = true;
+  }
+  const handleEditMonitor = () => {
+    m_title.value = '编辑充电站'
+    addRef.value!.centerDialogVisible = true;
+  }
   ///api/stationList
 </script>
 
@@ -259,7 +274,7 @@
       </div>
     </div>
     <div class="opera-content">
-      <el-button type="primary">
+      <el-button type="primary" @click="handleAddMonitor">
         <el-icon><Plus /></el-icon>
         新增充电站
       </el-button>
@@ -276,16 +291,24 @@
           </el-table-column>
         </template>
         <el-table-column fixed="right" label="操作" width="148">
-          <template #default="scope">
-            <el-button type="primary" size="small">
+          <template #default="{ row }">
+            <el-button @click="handleEditMonitor" type="primary" size="small">
               编辑
             </el-button>
-            <el-button
-              size="small"
-              type="danger"
+            <el-popconfirm
+              @confirm="handleConfirmDelete(row)"
+              title="确定删除该条数据吗？"
+              placement="top-start"
             >
-              删除
-            </el-button>
+              <template #reference>
+                  <el-button
+                    size="small"
+                    type="danger"
+                  >
+                    删除
+                  </el-button>
+              </template>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -304,6 +327,7 @@
       />
     </div>
   </div>
+  <addMonitor :title="m_title" ref="addRef"/>
 </template>
 
 <style lang="less" scoped>
