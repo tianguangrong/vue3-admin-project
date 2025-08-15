@@ -108,7 +108,7 @@
       label: '状态',
       slot: true,
       fixed: false,
-      width: '90',
+      minWidth: '90',
       showTooltip: false,
     },
     {
@@ -196,6 +196,47 @@
     console.log(row.name);
     
   }
+  // 充电状态转义
+  type transType = {
+    className: string,
+    label: string
+  } | null
+  const transChargeStatus = (type: number): transType => {
+    let result: transType = null
+    switch (type) {
+      case 1:
+        result = {
+          label: '空闲中',
+          className: 'level-1'
+        }
+        break
+      case 2:
+        result = {
+          label: '使用中',
+          className: 'level-2'
+        }
+        break
+      case 3:
+        result = {
+          label: '待维修',
+          className: 'level-3'
+        }
+        break
+      case 4:
+        result = {
+          label: '维护中',
+          className: 'level-4'
+        }
+        break
+      default:
+        result = {
+          label: '维修中',
+          className: 'level-5'
+        }
+        break;
+    }
+    return result;
+  } 
   // 新增充电站
   const addRef = ref<{
     centerDialogVisible: Ref<boolean>
@@ -222,7 +263,6 @@
               <el-form-item prop="searchByNameOrId">
                 <el-input
                   v-model="form.searchByNameOrId"
-                  style="max-width: 600px"
                   :placeholder="'请输入查询'+ plher"
                   class="input-with-select"
                 >
@@ -284,9 +324,11 @@
         <el-table-column type="index" label="序号" width="62" />
         <template v-for="item of tableColumns">
           <el-table-column v-if="!item.slot" :key="item.prop" :fixed="item.fixed" :prop="item.prop" :label="item.label" :min-width="item.minWidth || ''" :width="item.width || ''"/>
-          <el-table-column v-else :label="item.label" :min-width="item.minWidth || ''" :width="item.width|| ''">
+          <el-table-column v-else :label="item.label" :min-width="item.minWidth || ''" :width="item.width || ''">
             <template #default="{row}">
-              {{ row[item.prop] }}
+              <span :class="['level', transChargeStatus(row[item.prop])!.className]">
+                {{ transChargeStatus(row[item.prop])!.label }}
+              </span>
             </template>
           </el-table-column>
         </template>
@@ -394,6 +436,30 @@
     flex: 1;
     // width: 100%;
     overflow: hidden;
+    :deep(.level) {
+      padding: 1px 2px ;
+      border-radius: 2px;
+    }
+    :deep(.level-1) {
+      color: rgb(98, 100, 96);
+      border: 1px solid rgb(98, 100, 96);
+    }
+    :deep(.level-2) {
+      color: rgb(124, 173, 97);
+      border: 1px solid rgb(124, 173, 97);
+    }
+    :deep(.level-3) {
+      color: rgb(74, 101, 239);
+      border: 1px solid rgb(74, 101, 239);
+    }
+    :deep(.level-4) {
+      color: rgb(98, 32, 39);
+      border: 1px solid rgb(98, 32, 39);
+    }
+    :deep(.level-5) {
+      color: rgb(75, 60, 188);
+      border: 1px solid rgb(75, 60, 188);
+    }
   }
   .pagination-content {
     display: flex;
