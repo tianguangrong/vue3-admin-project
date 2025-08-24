@@ -1,5 +1,5 @@
 <script setup lang="ts" name="Monitor">
-  import { onMounted, reactive, ref, type Reactive, type Ref } from 'vue';
+  import { onMounted, reactive, ref, watch, type Reactive, type Ref } from 'vue';
   import type { FormInstance, ComponentSize } from 'element-plus';
   import { ElNotification } from 'element-plus'
   import http from '@/utils/http';
@@ -15,6 +15,7 @@
     monitorUseStatus: [],
   })
   let plher = ref<string>('ID');
+  const targetRow = ref<ItableColumnType | null>(null)
   let ruleFormRef = ref<FormInstance>();
   let loading = ref(false)
   const options = [
@@ -192,9 +193,21 @@
     monitorDatas();
   })
   // 删除数据
-  const handleConfirmDelete = (row: Reactive<ItableColumnType>) => {
-    console.log(row.name);
-    
+  const handleConfirmDelete = async(row: Reactive<ItableColumnType>) => {
+    try {
+      loading.value = true;
+      const {code, data} = await http.post('api/station/delete', {id: row.id});
+      loading.value = false;
+      if(+code === 200 && data) {
+        const { list , total: _total }  = data as { list: any[], total: number}
+        tableData.value= list;
+        total.value = _total
+        return
+      }
+    } catch (error) {
+      loading.value = false;
+      console.log(error);
+    }
   }
   // 充电状态转义
   type transType = {
@@ -247,11 +260,15 @@
     m_title.value = '新增充电站'
     addRef.value!.centerDialogVisible = true;
   }
-  const handleEditMonitor = () => {
+  const handleEditMonitor = (row:ItableColumnType) => {
     m_title.value = '编辑充电站'
+    targetRow.value = row;
     addRef.value!.centerDialogVisible = true;
   }
-  ///api/stationList
+  const resetRow = (value: boolean) => {
+    console.log('jinlaile', value);
+    targetRow.value = null;
+  }
 </script>
 
 <template>
@@ -334,7 +351,7 @@
         </template>
         <el-table-column fixed="right" label="操作" width="148">
           <template #default="{ row }">
-            <el-button @click="handleEditMonitor" type="primary" size="small">
+            <el-button @click="handleEditMonitor(row)" type="primary" size="small">
               编辑
             </el-button>
             <el-popconfirm
@@ -369,7 +386,7 @@
       />
     </div>
   </div>
-  <addMonitor :title="m_title" ref="addRef"/>
+  <addMonitor :title="m_title" @reset-row="resetRow" :targetRow = "targetRow" ref="addRef"/>
 </template>
 
 <style lang="less" scoped>

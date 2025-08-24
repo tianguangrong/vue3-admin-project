@@ -1,7 +1,9 @@
 
 <script setup lang="ts" name="AddMonitor">
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, watch, onUnmounted, type Ref } from 'vue';
   import type { FormInstance, FormRules } from 'element-plus';
+  import http from '@/utils/http';
+  import { ElNotification } from 'element-plus'
    // 表格逻辑
   interface RuleForm {
     id?: string;
@@ -17,10 +19,18 @@
   }
   const monitorFormRef = ref<FormInstance | null>(null)
   const centerDialogVisible = ref(false);
-  withDefaults(defineProps<{
-    title?: string
-  }>(), {
-    title: '新增充电站'
+  const timer = ref<number>(0)
+  const {title = '新增充电站', targetRow = {} } = defineProps<{
+    title?: string,
+    targetRow?: any
+  }>()
+  
+  watch(() => targetRow,(newVal) => {
+    if (newVal) {
+      Object.assign(ruleForm, newVal)
+    }
+  }, {
+    deep: true
   })
   const ruleForm = reactive<RuleForm>({
     name: '',
@@ -106,20 +116,52 @@
   ];
   const submitForm = async (formEl: FormInstance | null) => {
     if (!formEl) return
-    await formEl.validate((valid, fields) => {
+    await formEl.validate(async(valid, fields) => {
       if (valid) {
         centerDialogVisible.value = false;
-        console.log('submit!')
+        const {code: v_200 = 500, data = null} = await http.post('api/station/edit', {...ruleForm});
+        if (+v_200=== 200 && data) {
+          ElNotification({
+            title:'Success',
+            duration: 5000,
+            type: 'success',
+            message: '操作成功啦'
+          })
+          timer.value = setTimeout(()=> {
+            defineResetClicker()
+          }, 20)
+        }
       } else {
         console.log('error submit!', fields)
       }
     })
   }
-
+  onUnmounted(()=> {
+    console.log('zujianxiezaile')
+    clearTimeout(timer.value)
+  })
+  const emits = defineEmits<{
+    (e: 'reset-row', data: boolean): void
+  }>()
+  const defineResetClicker = () => {
+    centerDialogVisible.value = false;
+    emits('reset-row', false)
+    Object.assign(ruleForm, {
+      name: '',
+      fast: null,
+      city: '',
+      slow: null,
+      now: null,
+      fault: null,
+      person: '',
+      tel: null,
+      status: null
+    })
+  }
 const resetForm = (formEl: FormInstance | null) => {
   if (!formEl) return;
-  centerDialogVisible.value = false;
   formEl.resetFields();
+  defineResetClicker();
 }
   defineExpose({
     centerDialogVisible

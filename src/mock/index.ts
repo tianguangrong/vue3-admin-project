@@ -605,11 +605,18 @@ Mock.mock("https://www.demo.com/api/station/edit", 'post', (options: any) => {
 
 //删除充电站接口
 Mock.mock("https://www.demo.com/api/station/delete", "post", (options: any) => {
-  console.log("删除充电站接口收到参数", JSON.parse(options.body))
+  chargingStation = originalChargingStation
+  const { id } = options.body ? JSON.parse(options.body) : {}
+  chargingStation = chargingStation.filter(item => item.id !== id);
+  // 实现分页
+  const total = chargingStation.length;
   return {
     code: 200,
     success: true,
-    data: "操作成功",
+    data:  {
+      list:chargingStation,
+      total
+    },
   };
 })
 
